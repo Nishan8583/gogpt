@@ -6,3 +6,4 @@
 
 ### Usage
  - `main.exe --message="your message here"` 
+ - `main.exe -i --username="imauser"`

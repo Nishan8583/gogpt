@@ -8,33 +8,40 @@ import (
 	"os"
 )
 
+// -i option to make it interactive
+// (username) >>>
+// (gpt) >>>
 func main() {
 
-	msg := "" // holds user message
+	// setting up flags for interactive
+	interactiveCmd := flag.NewFlagSet("interactive", flag.ExitOnError)
+	username := interactiveCmd.String("username", "you", "--username <your username>")
+
+	// setting up one shot message sending
+	msg := ""
+	configFile := ""
 	flag.StringVar(&msg, "message", "", "--message <message to send chatGPT>")
-	flag.Parse()
+	flag.StringVar(&configFile, "config", "../settings.yaml", "--message <path to config>")
 
-	if len(msg) == 0 {
-		flag.Usage()
-		os.Exit(-1)
+	if len(os.Args) < 2 {
+		log.Fatal("ERROR please provide flags for me to work with.")
 	}
 
-	gpt, err := openai.New("../settings.yaml")
-	if err != nil {
-		log.Fatal("could not create type", err)
+	switch os.Args[1] {
+	case "interactive", "--interactive", "-i":
+		interactiveCmd.Parse(os.Args[2:])
+		gpt, err := openai.New(configFile)
+		if err != nil {
+			log.Fatal("could not craft gpt instance", err)
+		}
+		gpt.InteractiveChat(*username)
+	default:
+		flag.Parse()
+		gpt, err := openai.New(configFile)
+		if err != nil {
+			log.Fatal("could not craft gpt instance", err)
+		}
+		fmt.Println(gpt.SendSingleMessage(msg))
 	}
-	resp, err := gpt.Chat([]openai.Message{
-		{"user", msg},
-	})
-
-	if err != nil {
-		log.Fatal("while chatting with gpt", err)
-	}
-
-	if len(resp.Choices) <= 0 {
-		log.Fatal("WARN chat gpt empty reply")
-	}
-
-	fmt.Println(resp.Choices[0].Message.Content)
 
 }
