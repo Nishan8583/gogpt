@@ -26,7 +26,7 @@ func New(filepath string) (OpenAI, error) {
 		return oai, errors.Wrap(err, "while unmarshalling")
 	}
 
-	oai.client = &http.Client{Timeout: 10 * time.Second}
+	oai.client = &http.Client{Timeout: 20 * time.Second}
 
 	return oai, err
 }
