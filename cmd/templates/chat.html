@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    .chat-container {
+      max-width: 400px;
+      margin: 20px auto;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .chat-header {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .chat-messages {
+      padding: 10px;
+      overflow-y: scroll;
+      max-height: 300px;
+    }
+
+    .message {
+      margin-bottom: 10px;
+    }
+
+    .message.sent {
+      text-align: right;
+    }
+
+    .message.received {
+      text-align: left;
+    }
+
+    .message-body {
+      padding: 8px;
+      border-radius: 5px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      display: inline-block;
+      max-width: 70%;
+    }
+
+    .message-input {
+      width: calc(100% - 20px);
+      margin: 10px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .send-button {
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat-container">
+    <div class="chat-header">
+      Simple Chat
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <!-- Messages will be displayed here -->
+    </div>
+    <div class="message-input-container">
+      <input type="text" class="message-input" id="messageInput" placeholder="Type your message...">
+      <button class="send-button" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    function sendMessage() {
+      var messageInput = document.getElementById('messageInput');
+      var messageText = messageInput.value.trim();
+
+      if (messageText !== '') {
+        var chatMessages = document.getElementById('chatMessages');
+        var messageContainer = document.createElement('div');
+        var messageBody = document.createElement('div');
+
+        messageContainer.classList.add('message', 'sent');
+        messageBody.classList.add('message-body');
+        messageBody.textContent = messageText;
+
+        messageContainer.appendChild(messageBody);
+        chatMessages.appendChild(messageContainer);
+
+        // Clear the input field
+        messageInput.value = '';
+
+        // Scroll to the bottom of the chat messages
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        fetch("/api/v1/send-message",{
+          method:"POST",
+          headers:{"content-type":"application/"},
+          body:JSON.stringify({"msg":messageText})
+        })
+        .then(response => response.text())
+        .then(result => {
+          console.log(result)
+          var message = document.createElement("div");
+          message.textContent = result
+          messageContainer.appendChild(message);
+        chatMessages.appendChild(messageContainer);
+        // Clear the input field
+        messageInput.value = '';
+        }
+        )
+        .catch(error => {
+          console.log("caught error",error)
+        })
+      }
+    }
+  </script>
+
+</body>
+</html>

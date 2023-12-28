@@ -2,8 +2,9 @@ package openai
 
 import (
 	"flag"
-	"log"
 	"os"
+
+	"github.com/rs/zerolog/log"
 )
 
 // SendSingleMessage takes the message and the path to config file to read config from
@@ -15,15 +16,16 @@ func (oa OpenAI) SendSingleMessage(msg string) string {
 	}
 
 	resp, err := oa.Chat([]Message{
-		{"user", msg},
+		{Role: "system", Content: "you are a friend"},
+		{Role: "user", Content: msg},
 	})
 
 	if err != nil {
-		log.Fatal("while chatting with gpt", err)
+		log.Fatal().Msgf("while chatting with gpt %+v", err)
 	}
-
+	log.Debug().Msgf("reply from server %+v", resp)
 	if len(resp.Choices) <= 0 {
-		log.Fatal("WARN chat gpt empty reply")
+		log.Fatal().Msgf("WARN chat gpt empty reply %+v", err)
 	}
 
 	return resp.Choices[0].Message.Content
