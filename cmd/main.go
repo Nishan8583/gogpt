@@ -14,13 +14,14 @@ import (
 )
 
 type config struct {
-	Interactive   bool   `arg:"-i,--interactive" help:"make the program run interactively"`
-	AuditCode     bool   `arg:"-a,--audit-code" help:"audits code"`
-	ConfigFile    string `arg:"-c,--config" help:"path to config file that has the openAI API key" default:"./settings.json"`
-	Debug         bool   `arg:"-d,--debug" help:"set it to enable debug mode" default:"false"`
-	Username      string `arg:"-u,--username" help:"username to display" default:"you"`
-	Message       string `arg:"-m,--message" help:"message to send to GPT"`
-	CodeDirectory string `arg:"--code-dir" help:"give directory to all code files" default:"./sample_code"`
+	Interactive     bool   `arg:"-i,--interactive" help:"make the program run interactively"`
+	AuditCode       bool   `arg:"-a,--audit-code" help:"audits code"`
+	ConfigFile      string `arg:"-c,--config" help:"path to config file that has the openAI API key" default:"./settings.json"`
+	Debug           bool   `arg:"-d,--debug" help:"set it to enable debug mode" default:"false"`
+	Username        string `arg:"-u,--username" help:"username to display" default:"you"`
+	Message         string `arg:"-m,--message" help:"message to send to GPT"`
+	CodeDirectory   string `arg:"--code-dir" help:"give directory to all code files" default:"./sample_code"`
+	OutputDirectory string `arg:"-o,--ouput-dir" help:"output directory for the report" default:"./outputdir"`
 }
 
 //go:embed templates/chat.html
@@ -65,8 +66,15 @@ func main() {
 				content, err := os.ReadFile(path)
 				if err != nil {
 					log.Warn().Msgf("error while trying to read file=%s error=%v", path, err)
+					return nil
 				}
-				auditor.ScanCode(string(content))
+				resp, err := auditor.ScanCode(string(content))
+				if err != nil {
+					log.Warn().Msgf("while getting report for %s", path)
+					return nil
+				}
+				_ = resp
+
 			}
 			return nil
 		})
