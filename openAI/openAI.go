@@ -52,7 +52,7 @@ func (oa OpenAI) Chat(msg []Message) (OpenAIResponse, error) {
 	// Crafting message body for openAI
 	req := Request{
 		Model:       "gpt-3.5-turbo",
-		Temperature: 0.7,
+		Temperature: 0.2,
 		Messages:    msg,
 	}
 
