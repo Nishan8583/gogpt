@@ -16,4 +16,4 @@ clean:
 # Default target
 all: build
 
-.PHONY: build clean test all
+.PHONY: build clean all
