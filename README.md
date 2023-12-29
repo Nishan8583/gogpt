@@ -12,4 +12,6 @@
  - `main.exe --audit-code -c settings.yaml`
 
 ### TODO
- - [] Create a front end browser UI to upload zip files containing source codes.
+- [x] A simple chat interactive interface to OpenAI.
+- [x] Send source code to openAI to find vulnerbility in soruce code and output results in directory.
+- [ ] Create a front end browser UI to upload zip files containing source codes.
