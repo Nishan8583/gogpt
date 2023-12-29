@@ -1,3 +1,4 @@
 ./cmd/*.exe
+./cmd/outputdir
 ./openAI/test_config.yaml
 settings.yaml

@@ -4,9 +4,6 @@ import (
 	"embed"
 	"fmt"
 	openai "gogpt/openAI"
-	"path/filepath"
-
-	"os"
 
 	args "github.com/alexflint/go-arg"
 	"github.com/rs/zerolog"
@@ -32,6 +29,7 @@ var content embed.FS
 // (gpt) >>>
 func main() {
 
+	// parse command line flags and set debug log level if requested
 	c := config{}
 	args.MustParse(&c)
 	log.Debug().Msgf("%+v", c)
@@ -41,51 +39,23 @@ func main() {
 	}
 	//server.StartServer(content)
 
-	if len(os.Args) < 2 {
-		log.Fatal().Msg("ERROR please provide flags for me to work with.")
+	// Create a new openAI instance
+	oa, err := openai.New(c.ConfigFile)
+	if err != nil {
+		log.Error().Msgf("while creating openai instance %v", err)
+		return
 	}
-	fmt.Println("Well this is interesting")
 
 	if c.Interactive {
-		gpt, err := openai.New(c.ConfigFile)
-		if err != nil {
-			log.Fatal().Msgf("could not craft gpt instance %+v", err)
-		}
-		gpt.InteractiveChat(c.Username)
+		// start a interactive chat session
+		oa.InteractiveChat(c.Username)
 	} else if c.AuditCode {
-		auditor, err := openai.New(c.ConfigFile)
-		if err != nil {
-			log.Fatal().Msgf("error while creating code auditor %+v", err)
-		}
-
-		filepath.Walk(c.CodeDirectory, func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			if !info.IsDir() {
-				content, err := os.ReadFile(path)
-				if err != nil {
-					log.Warn().Msgf("error while trying to read file=%s error=%v", path, err)
-					return nil
-				}
-				resp, err := auditor.ScanCode(string(content))
-				if err != nil {
-					log.Warn().Msgf("while getting report for %s", path)
-					return nil
-				}
-				_ = resp
-
-			}
-			return nil
-		})
-
+		// start code auditing
+		log.Debug().Msg("starting to audit code")
+		oa.AuditCode(c.CodeDirectory, c.OutputDirectory)
 	} else {
-
-		gpt, err := openai.New(c.ConfigFile)
-		if err != nil {
-			log.Fatal().Msgf("could not craft gpt instance %+v", err)
-		}
-		fmt.Println(gpt.SendSingleMessage(c.Message))
+		// a one off send message and reply from chatGPT
+		fmt.Println(oa.SendSingleMessage(c.Message))
 	}
 
 }
