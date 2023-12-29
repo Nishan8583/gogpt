@@ -13,7 +13,7 @@ import (
 type config struct {
 	Interactive     bool   `arg:"-i,--interactive" help:"make the program run interactively"`
 	AuditCode       bool   `arg:"-a,--audit-code" help:"audits code"`
-	ConfigFile      string `arg:"-c,--config" help:"path to config file that has the openAI API key" default:"./settings.json"`
+	ConfigFile      string `arg:"-c,--config" help:"path to config file that has the openAI API key" default:"./settings.yaml"`
 	Debug           bool   `arg:"-d,--debug" help:"set it to enable debug mode" default:"false"`
 	Username        string `arg:"-u,--username" help:"username to display" default:"you"`
 	Message         string `arg:"-m,--message" help:"message to send to GPT"`

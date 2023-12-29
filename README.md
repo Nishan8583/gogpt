@@ -3,7 +3,7 @@
  - Also has some basic cli chat functionality.
 
 ### Build 
- - In `cmd` directory `go build main.go -o main.exe`
+ - In `cmd` directory `go build -o main.exe main.go`.
 
 ### Usage
  - Add your OpenAI API key in settings.yaml.
