@@ -8,7 +8,7 @@
 
 ### Usage
  - After your OpenAI API key is set in settings.yaml.
- - `main.exe --audit-code -c settings.yaml`.
+ - `main.exe --audit-code -c settings.yaml --code-dir sample_vulnerable_code`.
 
 ### TODO
 - [x] A simple chat interactive interface to OpenAI.

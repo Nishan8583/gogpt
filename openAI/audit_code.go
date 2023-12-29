@@ -42,7 +42,7 @@ func (oa OpenAI) AuditCode(code_dir, output_dir string) {
 			if err := os.WriteFile(filepath.Join(output_dir, fileName), []byte(resp), 0700); err != nil {
 				log.Warn().Msgf("while creating output file for %s error=%s", path, err)
 			}
-			log.Debug().Msgf("report generated and saved in file %s", fileName)
+			log.Info().Msgf("report generated and saved in file %s", fileName)
 
 		}
 		return nil
