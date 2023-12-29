@@ -17,7 +17,7 @@ type config struct {
 	Debug           bool   `arg:"-d,--debug" help:"set it to enable debug mode" default:"false"`
 	Username        string `arg:"-u,--username" help:"username to display" default:"you"`
 	Message         string `arg:"-m,--message" help:"message to send to GPT"`
-	CodeDirectory   string `arg:"--code-dir" help:"give directory to all code files" default:"./sample_code"`
+	CodeDirectory   string `arg:"--code-dir" help:"give directory to all code files" default:"./sample_vulnerable_code"`
 	OutputDirectory string `arg:"-o,--ouput-dir" help:"output directory for the report" default:"./outputdir"`
 }
 

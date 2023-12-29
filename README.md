@@ -1,15 +1,14 @@
-# GOGPT
- - Its a simple CLI program to send your code to OpenAI to find for any vulnerabilities in your code.
+# code_scanner
+ - Its a simple CLI program that uses openAI to find for any vulnerabilities in your code.
  - Also has some basic cli chat functionality.
 
 ### Build 
- - In `cmd` directory `go build -o main.exe main.go`.
+ - `go build -o main.exe cmd/main.go` or use make.
+ - Make sure to set openAI api key in settings.yaml.
 
 ### Usage
- - Add your OpenAI API key in settings.yaml.
- - `main.exe --message="your message here"` 
- - `main.exe -i --username="imauser"`
- - `main.exe --audit-code -c settings.yaml`
+ - After your OpenAI API key is set in settings.yaml.
+ - `main.exe --audit-code -c settings.yaml`.
 
 ### TODO
 - [x] A simple chat interactive interface to OpenAI.
