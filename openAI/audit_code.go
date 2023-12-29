@@ -33,7 +33,7 @@ func (oa OpenAI) AuditCode(code_dir, output_dir string) {
 			log.Debug().Msgf("sending file content %s to openai", path)
 			resp, err := oa.ScanCode(string(content))
 			if err != nil {
-				log.Warn().Msgf("while getting report for %s", path)
+				log.Warn().Msgf("while getting report for %s error=%v", path, err)
 				return nil
 			}
 
