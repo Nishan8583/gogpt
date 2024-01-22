@@ -14,6 +14,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/nomic-ai/gpt4all/gpt4all-bindings/golang v0.0.0-20231220210103-c72c73a94fcf // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rs/zerolog v1.31.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect

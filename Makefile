@@ -1,5 +1,5 @@
 # Target binary name
-BINARY_NAME := code_scanner
+BINARY_NAME := code_scanner.exe
 
 # Source files
 SRC := ./cmd/main.go
