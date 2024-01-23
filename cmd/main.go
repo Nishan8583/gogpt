@@ -1,7 +1,6 @@
 package main
 
 import (
-	"embed"
 	"fmt"
 	openai "gogpt/openAI"
 
@@ -23,12 +22,6 @@ type config struct {
 	OutputDirectory   string `arg:"-o,--ouput-dir" help:"output directory for the report" default:"./outputdir"`
 }
 
-//go:embed templates/chat.html
-var content embed.FS
-
-// -i option to make it interactive
-// (username) >>>
-// (gpt) >>>
 func main() {
 
 	// parse command line flags and set debug log level if requested
@@ -57,7 +50,12 @@ func main() {
 		oa.AuditCode(c.CodeDirectory, c.OutputDirectory)
 	} else if c.SentimentAnalysis {
 		log.Debug().Msg("sentiment analysis")
-		fmt.Println(oa.PerformSentimentAnalysis(c.ChatLogFile))
+		sentimens, err := oa.PerformSentimentAnalysis(c.ChatLogFile)
+		if err != nil {
+			log.Error().Msgf("error during sentiment analysis %v", err)
+			return
+		}
+		fmt.Println(sentimens)
 	} else {
 		// a one off send message and reply from chatGPT
 		fmt.Println(oa.SendSingleMessage(c.Message))
