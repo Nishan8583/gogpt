@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 	openai "gogpt/openAI"
+	"os"
+
+	"os/exec"
 
 	args "github.com/alexflint/go-arg"
 	"github.com/rs/zerolog"
@@ -20,6 +23,9 @@ type config struct {
 	Message           string `arg:"-m,--message" help:"message to send to GPT"`
 	CodeDirectory     string `arg:"--code-dir" help:"give directory to all code files" default:"./sample_vulnerable_code"`
 	OutputDirectory   string `arg:"-o,--ouput-dir" help:"output directory for the report" default:"./outputdir"`
+	LocalLLM          bool   `arg:"-l,--local-llm" help:"use local llm to answer the question"`
+	VenvPath          string `arg:"--venv" help:"path to the virtual environment path" default:".venv"`
+	PythonScript      string `arg:"--python-script" help:"path to python script" default:"code_scan_helper.py"`
 }
 
 func main() {
@@ -34,6 +40,18 @@ func main() {
 	}
 	//server.StartServer(content)
 
+	python_path := fmt.Sprintf("%s/Scripts/python.exe", c.VenvPath)
+	if c.LocalLLM {
+		log.Info().Msgf("Using local LLM for task")
+		cmd := exec.Command(python_path, c.PythonScript, "-f", "bof.c")
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		if err := cmd.Run(); err != nil {
+			fmt.Println("during python script execution", err)
+			return
+		}
+		return
+	}
 	// Create a new openAI instance
 	oa, err := openai.New(c.ConfigFile)
 	if err != nil {

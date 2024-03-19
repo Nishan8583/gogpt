@@ -1,0 +1,23 @@
+There is a vulnerability in the provided code that could potentially lead to an SQL injection attack. 
+
+The vulnerability lies in the following line of code:
+
+$sql = 'SELECT * FROM employees WHERE employeeId = ' . $_GET['id'];
+
+The code directly concatenates the user-supplied `$_GET['id']` parameter into the SQL query without any sanitization or validation. This can allow an attacker to manipulate the input and inject malicious SQL code.
+
+To fix this vulnerability, you should use prepared statements with parameter binding to ensure the input is treated as data rather than executable code. Here's an example of how the code can be modified:
+
+```php
+$sql = 'SELECT * FROM employees WHERE employeeId = :id';
+$stmt = $file_db->prepare($sql);
+$stmt->bindParam(':id', $_GET['id']);
+$stmt->execute();
+
+while ($row = $stmt->fetch()) {
+    $employee = $row['LastName'] . " - " . $row['Email'] . "\n";
+    echo $employee;
+}
+```
+
+By using prepared statements and parameter binding, the input will be properly escaped, and the SQL injection vulnerability will be mitigated.
